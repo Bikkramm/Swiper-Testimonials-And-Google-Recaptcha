@@ -1,0 +1,204 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+
+<style>
+.testimonials-section {
+  padding: 36px 0px;
+  background: {{ section.settings.bg_color }};
+}
+
+.testimonials-heading {
+  text-align: center;
+  color:#2B2B2B;
+  margin-bottom: 35px;
+}
+
+.swiper {
+  max-width: 1200px;
+  margin: auto;
+  padding-bottom:50px;
+}
+
+.testimonial-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+  text-align: center;
+  height: 100%;
+  min-height:420px;
+  border:1px solid #ddd;
+}
+
+.testimonial-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.testimonial-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.testimonial-stars {
+  color: #f7b500;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.testimonial-text {
+  font-size: 16px;
+  color: #2B2B2B;
+  margin:0 auto;
+}
+.swiper-slide{
+  transform:scale(0.8) !important;
+}
+.swiper-slide.swiper-slide-active{
+  transform:scale(1) !important;
+}
+.swiper-pagination-bullet {
+  background: #000;
+}
+
+@media screen and (max-width:990px){
+.testimonials-section{
+ padding:36px 15px;
+}
+}
+</style>
+
+<section class="testimonials-section page-width">
+  <h2 class="testimonials-heading">
+    {{ section.settings.heading }}
+  </h2>
+
+  <div class="swiper testimonial-swiper">
+    <div class="swiper-wrapper">
+
+      {% for block in section.blocks %}
+        <div class="swiper-slide">
+          <div class="testimonial-card">
+
+            {% if block.settings.image %}
+              <img class="testimonial-img" 
+                   src="{{ block.settings.image | img_url: '200x200' }}">
+            {% endif %}
+
+            <div class="testimonial-stars">
+              {% for i in (1..block.settings.rating) %}
+                ★
+              {% endfor %}
+            </div>
+
+            <div class="testimonial-name">
+              {{ block.settings.name }}
+            </div>
+
+            <div class="testimonial-text">
+              {{ block.settings.review }}
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+
+    <div class="swiper-pagination"></div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+<script>
+new Swiper('.testimonial-swiper', {
+  loop: true,
+  centeredSlides: true,
+  spaceBetween: 0,
+  autoplay: {
+    delay: 3500,
+    disableOnInteraction: false
+  },  
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true
+  },
+  breakpoints: {
+    320: {
+      slidesPerView: 1
+    },
+    768: {
+      slidesPerView: 2
+    },
+    1024: {
+      slidesPerView: 3
+    }
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f6f6f6"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Customer Image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "John Doe"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "review",
+          "label": "Review Text",
+          "default": "Amazing product! Highly recommend."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}
